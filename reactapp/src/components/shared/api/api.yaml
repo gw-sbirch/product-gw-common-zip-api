@@ -1,0 +1,219 @@
+    openapi: 3.0.0
+    info:
+      title: Glasswall Common Zip API
+      description: Performs operations on ZIP files.
+      version: 0.1.9
+    servers:
+      - url: https://glasswall-common-zipapi.azurewebsites.net
+        description: AWS
+    paths:
+      /api/unzip-blobs-with-service-sas:
+        post:
+          summary: Unzips a file using a service sas
+          description: Unzips a zip found in the input service SAS and outputs the contents to location governed by the output service sas
+          parameters:
+            - in: query
+              name: code
+              schema:
+                type: string
+                default: NbACgTAIESwZtZulPM3LjSfEN1awM746UddQtzBKkEkE4raMlALOTw%3D%3D
+              required: true
+          requestBody:
+            content:
+              "application/json":
+                schema:
+                  type: object
+                  properties:
+                    inputServiceSasSig:
+                      type: string
+                    inputAccountName:
+                      type: string
+                    inputContainer:
+                      type: string
+                    inputBlob:
+                      type: string
+                    outputAccountName:
+                      type: string
+                    outputContainer:
+                      type: string
+          responses:
+            '200':    # status code
+              description: Success
+            '400':
+              description: Bad Request
+
+      /api/unzip-input-sas-to-download:
+        post:
+          summary: Unzips a zip located at the SAS and downloads its content
+          description: Unzips a zip found in the input SAS URL and outputs the contents to the response body
+          parameters:
+            - in: query
+              name: code
+              schema:
+                type: string
+                default: NbACgTAIESwZtZulPM3LjSfEN1awM746UddQtzBKkEkE4raMlALOTw%3D%3D
+              required: true
+          requestBody:
+            content:
+              "application/json":
+                schema:
+                  type: object
+                  properties:
+                    inputZipSas:
+                      type: string
+          responses:
+            '200':    # status code
+              description: Success
+            '400':
+              description: Bad Request
+
+      /api/unzip-input-sas-to-output-sas:
+        post:
+          summary: Unzips the input SAS to a list of presigned URLs
+          description: Unzips a zip found in the input SAS URL and outputs the contents to the input URLs. Requires the client to know the contents of the zip (Which can be found with the list endpoint)
+          parameters:
+            - in: query
+              name: code
+              schema:
+                type: string
+                default: NbACgTAIESwZtZulPM3LjSfEN1awM746UddQtzBKkEkE4raMlALOTw%3D%3D
+              required: true
+          requestBody:
+            content:
+              "application/json":
+                schema:
+                  type: object
+                  properties:
+                    inputZipSas:
+                      type: string
+                    outputZipItemSasMap:
+                      type: object
+                      properties:
+                        Name: 
+                          type: string
+                        SAS: 
+                          type: string
+          responses:
+            '200':    # status code
+              description: Success
+            '400':
+              description: Bad Request
+    
+      /api/zip-blobs-with-service-sas:
+        post:
+          summary: Zips the input blobs into an output blob using Service SAS keys
+          description: Zips a set of blobs found in the input service SAS account, The output is PUT to the output service SAS account.
+          parameters:
+            - in: query
+              name: code
+              schema:
+                type: string
+                default: NbACgTAIESwZtZulPM3LjSfEN1awM746UddQtzBKkEkE4raMlALOTw%3D%3D
+              required: true
+          requestBody:
+            content:
+              "application/json":
+                schema:
+                  type: object
+                  properties:
+                    inputServiceSasSig:
+                      type: string
+                    inputAccountName:
+                      type: string
+                    inputObjects:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          container: 
+                            type: string
+                          blob: 
+                            type: string
+                    outputServiceSasSig: string
+                    outputAccountName: string
+                    outputContainer: string
+                    outputBlob: string
+          responses:
+            '200':    # status code
+              description: Success
+            '400':
+              description: Bad Request
+    
+      /api/zip-input-sas-list-files:
+        post:
+          summary: Lists the contents of the input SAS zip
+          description: Unzips the input zip found in the SAS URL and lists its contents
+          parameters:
+            - in: query
+              name: code
+              schema:
+                type: string
+                default: NbACgTAIESwZtZulPM3LjSfEN1awM746UddQtzBKkEkE4raMlALOTw%3D%3D
+              required: true
+          requestBody:
+            content:
+              "application/json":
+                schema:
+                  type: object
+                  properties:
+                    inputZipSas: string
+          responses:
+            '200':    # status code
+              description: Success
+            '400':
+              description: Bad Request
+    
+      /api/zip-input-sas-to-download:
+        post:
+          summary: Zips the input blobs found in the SAS urls and downloads the zipped result
+          description: Zips the input blobs found in the SAS urls and downloads the zipped result
+          parameters:
+            - in: query
+              name: code
+              schema:
+                type: string
+                default: NbACgTAIESwZtZulPM3LjSfEN1awM746UddQtzBKkEkE4raMlALOTw%3D%3D
+              required: true
+          requestBody:
+            content:
+              "application/json":
+                schema:
+                  type: object
+                  properties:
+                    inputZipSas: string
+          responses:
+            '200':    # status code
+              description: Success
+            '400':
+              description: Bad Request
+
+
+    
+      /api/zip-input-sas-to-output-sas:
+        post:
+          summary: Zips the input blob SAS urls into an output SAS URL
+          description: Zips a set of blobs found in the input SAS URL's, The output is PUT to the output SAS URL.
+          parameters:
+            - in: query
+              name: code
+              schema:
+                type: string
+                default: NbACgTAIESwZtZulPM3LjSfEN1awM746UddQtzBKkEkE4raMlALOTw%3D%3D
+              required: true
+          requestBody:
+            content:
+              "application/json":
+                schema:
+                  type: object
+                  properties:
+                    inputObjectsToZipSas:
+                      type: array
+                      items:
+                        type: string
+                    outputZipSas:
+                      type: string
+          responses:
+            '200':    # status code
+              description: Success
+            '400':
+              description: Bad Request
