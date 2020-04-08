@@ -1,5 +1,5 @@
 {
-  "name": "glasswall-gw-common-zip-api",
+  "name": "product-gw-common-zip-api",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
